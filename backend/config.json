@@ -1,0 +1,7 @@
+{
+    "locations": {
+        "movie": "/home/soumil/movies",
+        "tv": "~/tv",
+        "music": "~/music"
+    }
+}

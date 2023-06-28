@@ -7,9 +7,14 @@ export const load = (async () => {
 export const actions: Actions = {
     default: async (event) => {
         const formData = await event.request.formData();
-        const files = formData.getAll('files');
+        /* const files = formData.getAll('files');
         for (let file of files) {
             console.log(file);
-        }
+        } */
+
+        const res = await fetch('http://localhost:3000/upload', {
+            method: 'POST',
+            body: formData
+        })
     }
 }

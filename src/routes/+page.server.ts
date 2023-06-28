@@ -1,5 +1,4 @@
 import type { PageServerLoad, Actions } from './$types';
-import fs from 'fs';
 
 export const load = (async () => {
     return {};

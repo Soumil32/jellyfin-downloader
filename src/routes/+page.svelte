@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { deserialize, enhance } from "$app/forms";
+	import type { ActionResult } from "@sveltejs/kit";
+
     let uploadedFiles: any;
     let typeOfContent: 'movie' | 'tv' | 'music';
 
@@ -16,11 +19,31 @@
         console.log(data);
     }
 
-    $: console.log(uploadedFiles);
+    async function handleSubmit(event: Event) {
+        console.log({this: this});
+
+        console.log(this[0].files)
+        const files = this[0].files
+        const data = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            console.log(file);
+            data.append('files', file);
+        }
+        data.append('type', typeOfContent);
+
+        const response = await fetch(this.action, {
+            method: 'POST',
+            body: data
+        });
+
+        const result: ActionResult = deserialize(await response.text());
+    }
+
 </script>
 
-<form>
-    <input type="file" bind:files={uploadedFiles} /> <br>
+<form method="post" on:submit|preventDefault={handleSubmit}>
+    <input name="files" type="file" bind:files={uploadedFiles} /> <br>
     <select bind:value={typeOfContent}>
         <option value="movie">Movie</option>
         <option value="tv">TV</option>

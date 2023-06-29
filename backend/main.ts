@@ -14,6 +14,8 @@ async function handler(req: Request): Promise<Response> {
     const files = data.getAll("files");
     const type = data.get("type")?.toString().toLowerCase();
 
+    if (!files || type) return new Response("files or type not provided", { status: 400 });
+
     for (let file of files) {
       file = file as File;
       const content = await file.arrayBuffer();
@@ -35,13 +37,21 @@ async function handler(req: Request): Promise<Response> {
     const type = data.get("type")?.toString().toLowerCase();
     if (!type || !url) return new Response("type or link not provided", { status: 400 });
 
-    const downloader = new Downloader({
+    
+    const downloader: Downloader = new Downloader({
       url,
       directory: config.locations[type],
+      skipExistingFileName: true,
+      onProgress: function (percentage: number, chunk: ArrayBuffer, remainingSize: number) {
+        //Gets called with each chunk.
+        console.log("% ", percentage);
+        console.log("Current chunk of data: ", chunk);
+        console.log("Remaining bytes: ", remainingSize);
+      },
     });
     await downloader.download();
 
-    return new Response("downloaded");
+    return new Response(JSON.stringify({message: "downloaded",}));
   }
 
   return new Promise((resolve, reject) => {
@@ -49,4 +59,4 @@ async function handler(req: Request): Promise<Response> {
   });
 }
 
-serve(handler, { port: 3000 });
+serve(handler, { port: config.port, hostname: config.hostname });

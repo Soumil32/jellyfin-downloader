@@ -3,5 +3,7 @@
         "movie": "/home/soumil/movies",
         "tv": "~/tv",
         "music": "~/music"
-    }
+    },
+    "port": "3000",
+    "hostname": "localhost"
 }

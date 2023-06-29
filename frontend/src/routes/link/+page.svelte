@@ -16,6 +16,6 @@
         <option value="music">Music</option>
     </select>
     <button type="submit">Submit</button>
-
-    {form}
+    <br>
+    {form ?? ''}
 </form>

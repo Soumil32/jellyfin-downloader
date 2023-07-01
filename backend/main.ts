@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { posix } from "https://deno.land/std@0.192.0/path/mod.ts";
 import Downloader from "npm:nodejs-file-downloader"
+import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 
 const config = JSON.parse(Deno.readTextFileSync("./config.json"));
 
@@ -38,7 +39,7 @@ async function handler(req: Request): Promise<Response> {
     if (!type || !url) return new Response("type or link not provided", { status: 400 });
 
     
-    const downloader: Downloader = new Downloader({
+    const downloader = new Downloader({
       url,
       directory: config.locations[type],
       skipExistingFileName: true,

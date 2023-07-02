@@ -5,5 +5,5 @@
         "music": "/home/soumil/music"
     },
     "port": "3000",
-    "hostname": "soumil-pi.lan"
+    "hostname": "localhost"
 }

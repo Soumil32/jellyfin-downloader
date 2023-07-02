@@ -1,5 +1,5 @@
 {
   "tasks": {
-    "dev": "env MOVIE_PATH='/' deno run --watch --allow-net --allow-env --allow-read --allow-write --allow-sys main.ts"
+    "dev": "deno run --watch --allow-net --allow-env --allow-read --allow-write --allow-sys main.ts"
   }
 }

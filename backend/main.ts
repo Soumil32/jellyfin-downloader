@@ -3,7 +3,13 @@ import { posix } from "https://deno.land/std@0.192.0/path/mod.ts";
 import Downloader from "npm:nodejs-file-downloader"
 import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 
-const config = JSON.parse(Deno.readTextFileSync(Deno.execPath().split("/").slice(0, -1).join("/") + "/config.json"));
+let config: Record<string | number | symbol, never>;
+try{
+  config = JSON.parse(Deno.readTextFileSync(Deno.execPath().split("/").slice(0, -1).join("/") + "/config.json"));
+} catch (_e) {
+  console.log("config.json not found, might be in development mode");
+  config = JSON.parse(Deno.readTextFileSync("./config.json"));
+}
 
 async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
@@ -64,4 +70,8 @@ async function handler(req: Request): Promise<Response> {
   });
 }
 
-serve(handler, { port: config.port, hostname: config.hostname });
+try {
+  serve(handler, { port: config.port, hostname: config.hostname });
+} catch (e) {
+  console.log('Error: ', e);
+}

@@ -6,15 +6,9 @@ export const load = (async () => {
 
 export const actions: Actions = {
     default: async (event) => {
-        const formData = await event.request.formData();
-        /* const files = formData.getAll('files');
-        for (let file of files) {
-            console.log(file);
-        } */
+        const { request } = event;
+        const { body } = request;
 
-        const res = await fetch('http://soumil-pi.lan:3000/upload', {
-            method: 'POST',
-            body: formData
-        })
+        fetch(request)
     }
 }

@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
 import { posix } from "https://deno.land/std@0.192.0/path/mod.ts";
 import Downloader from "npm:nodejs-file-downloader"
+import { copy } from "https://deno.land/std@0.192.0/bytes/copy.ts";
 import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 
 let config: Record<string | number | symbol, never>;
@@ -17,27 +18,15 @@ async function handler(req: Request): Promise<Response> {
 
   if (path === "/upload") {
     console.log("upload");
-    const data = await req.formData();
-    const files = data.getAll("files");
-    const type = data.get("type")?.toString().toLowerCase();
+    const fileName = url.searchParams.get("fileName");
+    const type = url.searchParams.get("type");
 
-    if (!files || !type) return new Response("files or type not provided", { status: 400 });
+    if (!fileName || !type) return new Response("files or type not provided", { status: 400 });
 
-    for (let file of files) {
-      console.log("next file")
-      file = file as File;
-      const content = await file.arrayBuffer();
-      console.log({file, content})
-
-      if (type) {
-        const location = posix.join(config.locations[type], file.name);
-        console.log("ready to write")
-        Deno.writeFileSync(location, new Uint8Array(content));
-        console.log("written")
-      } else {
-        return new Response("type not provided", { status: 400 });
-      }
-    }
+    const file = await Deno.open(posix.join(config.locations[type], fileName), { create: true, write: true, append: true });
+    //@ts-ignore it will be a chunck
+    copy(req.body, file);
+    file.close();
 
     return new Response("uploaded", {status: 200});
   } 

@@ -19,7 +19,7 @@
         const chunkCount = Math.ceil(content.byteLength / CHUNK_SIZE);
         for (let i = 0; i < chunkCount; i++) {
             const chunk = content.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-            await fetch(`localhost:3000/upload?fileName=${uploadedFiles[0].name}`, {
+            await fetch(`localhost:3000/upload?fileName=${uploadedFiles[0].name}&type=${typeOfContent}`, {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/octet-stream',
@@ -30,6 +30,7 @@
         } 
         status = 'Uploaded';
     }
+}
 
     async function handleSubmit(event: Event) {
         console.log({this: this});

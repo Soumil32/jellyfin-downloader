@@ -12,7 +12,7 @@ export const actions: Actions = {
             console.log(file);
         } */
 
-        const res = await fetch('http://localhost:3000/upload', {
+        const res = await fetch('http://soumil-pi.lan:3000/upload', {
             method: 'POST',
             body: formData
         })

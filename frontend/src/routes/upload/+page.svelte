@@ -2,21 +2,12 @@
     import { deserialize, enhance } from "$app/forms";
 	import type { ActionResult } from "@sveltejs/kit";
 
-    let uploadedFiles: any;
+    let uploadedFiles: FileList;
     let typeOfContent: 'movie' | 'tv' | 'music';
+    let status: string = '';
 
     const upload = async () => {
-        const formData = new FormData();
-        formData.append('files', uploadedFiles);
-        formData.append('type', typeOfContent);
-
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await response.json();
-        console.log(data);
+        
     }
 
     async function handleSubmit(event: Event) {
@@ -42,12 +33,17 @@
 
 </script>
 
-<form method="post" on:submit|preventDefault={handleSubmit}>
-    <input name="files" type="file" bind:files={uploadedFiles} /> <br>
-    <select bind:value={typeOfContent}>
-        <option value="movie">Movie</option>
-        <option value="tv">TV</option>
-        <option value="music">Music</option>
-    </select>
-    <button type="submit">Upload</button>
-</form>
+<div class="flex h-screen justify-center">
+    <form method="post" on:submit|preventDefault={upload} class="form-control lg:w-1/2 gap-5">
+        <label for="files" class="label"><span class="label-text">Upload Files</span></label>
+        <input name="files" type="file" bind:files={uploadedFiles} class="file-input file-input-bordered" /> <br>
+        <label for="type" class="label"><span class="label-text">Type of Content</span></label>
+        <select id="type" bind:value={typeOfContent} class="select select-bordered border-2">
+            <option value="movie">Movie</option>
+            <option value="tv">TV</option>
+            <option value="music">Music</option>
+        </select>
+        <button type="submit" class="btn btn-bordered">Upload</button>
+        <small>{status}</small>
+    </form>
+</div>

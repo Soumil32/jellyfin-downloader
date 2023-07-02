@@ -1,9 +1,9 @@
 {
     "locations": {
         "movie": "/home/soumil/movies",
-        "tv": "~/tv",
-        "music": "~/music"
+        "tv": "/home/soumil/tv",
+        "music": "/home/soumil/music"
     },
     "port": "3000",
-    "hostname": "localhost"
+    "hostname": "soumil-pi.lan"
 }

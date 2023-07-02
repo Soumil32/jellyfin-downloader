@@ -3,7 +3,7 @@ import { posix } from "https://deno.land/std@0.192.0/path/mod.ts";
 import Downloader from "npm:nodejs-file-downloader"
 import { Server } from "https://deno.land/x/socket_io@0.1.1/mod.ts";
 
-const config = JSON.parse(Deno.readTextFileSync("./config.json"));
+const config = JSON.parse(Deno.readTextFileSync(Deno.execPath().split("/").slice(0, -1).join("/") + "/config.json"));
 
 async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
@@ -15,21 +15,25 @@ async function handler(req: Request): Promise<Response> {
     const files = data.getAll("files");
     const type = data.get("type")?.toString().toLowerCase();
 
-    if (!files || type) return new Response("files or type not provided", { status: 400 });
+    if (!files || !type) return new Response("files or type not provided", { status: 400 });
 
     for (let file of files) {
+      console.log("next file")
       file = file as File;
       const content = await file.arrayBuffer();
+      console.log({file, content})
 
       if (type) {
-        const location = posix.join(posix.fromFileUrl(`file://${config.locations[type]}`), file.name);
+        const location = posix.join(config.locations[type], file.name);
+        console.log("ready to write")
         Deno.writeFileSync(location, new Uint8Array(content));
+        console.log("written")
       } else {
         return new Response("type not provided", { status: 400 });
       }
     }
 
-    return new Response("uploaded");
+    return new Response("uploaded", {status: 200});
   } 
   else if (path === "/link") {
     console.log("link");

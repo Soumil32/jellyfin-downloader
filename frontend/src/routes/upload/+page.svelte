@@ -7,7 +7,28 @@
     let status: string = '';
 
     const upload = async () => {
-        
+        status = 'Uploading...';
+        const fileReader = new FileReader();
+        console.log(uploadedFiles);
+        fileReader.readAsArrayBuffer(uploadedFiles[0]);
+        fileReader.onload = async event => {
+        console.log("File  read successfully");
+        //@ts-ignore
+        const content = event.target.result as ArrayBuffer;
+        const CHUNK_SIZE = 5000;
+        const chunkCount = Math.ceil(content.byteLength / CHUNK_SIZE);
+        for (let i = 0; i < chunkCount; i++) {
+            const chunk = content.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+            await fetch(`localhost:3000/upload?fileName=${uploadedFiles[0].name}`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/octet-stream',
+                    'content-length': chunk.byteLength.toString(),
+                },
+                body: chunk
+            });
+        } 
+        status = 'Uploaded';
     }
 
     async function handleSubmit(event: Event) {

@@ -55,7 +55,7 @@
 </script>
 
 <div class="flex h-screen justify-center">
-    <form method="post" on:submit|preventDefault={upload} class="form-control lg:w-1/2 gap-5">
+    <form method="post" on:submit|preventDefault={handleSubmit} class="form-control lg:w-1/2 gap-5">
         <label for="files" class="label"><span class="label-text">Upload Files</span></label>
         <input name="files" type="file" bind:files={uploadedFiles} class="file-input file-input-bordered" /> <br>
         <label for="type" class="label"><span class="label-text">Type of Content</span></label>
